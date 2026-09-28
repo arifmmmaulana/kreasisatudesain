@@ -1,0 +1,60 @@
+---
+import { servicesData } from "@/data/services";
+import { getServiceWhatsAppUrl } from "@/lib/whatsapp";
+---
+
+<section id="layanan" class="py-20 sm:py-24 bg-white border-b border-stone-200 scroll-mt-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Section Header */}
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 font-display tracking-tight mb-4">
+        Layanan Kami
+      </h2>
+      <p class="text-base sm:text-lg text-stone-600 font-light leading-relaxed">
+        Kreasi Satu Desain menawarkan layanan terintegrasi mulai dari konsep awal hingga penyelesaian proyek, meliputi:
+      </p>
+    </div>
+
+    {/* Two Main Service Pillars */}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+      {servicesData.map((service) => (
+        <div class="flex flex-col justify-between rounded-2xl bg-stone-50 border border-stone-200/90 p-6 sm:p-10 shadow-sm hover:shadow-md hover:border-stone-300 transition-all duration-300">
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-stone-900 font-display mb-6 pb-4 border-b border-stone-200">
+              {service.title}
+            </h3>
+
+            {/* Feature Checklist List */}
+            <ul class="space-y-4 mb-8">
+              {service.features.map((feature) => (
+                <li class="flex items-start gap-3.5">
+                  <span class="flex-shrink-0 mt-0.5 text-stone-800">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
+                      <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                  <span class="text-sm sm:text-base leading-snug font-medium text-stone-800">
+                    {feature}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Consultation Button */}
+          <div class="pt-4 border-t border-stone-200/70">
+            <a
+              href={getServiceWhatsAppUrl(service.waQuery)}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-sm sm:text-base font-semibold text-white hover:bg-brand-dark transition-all duration-200 shadow-sm group active:scale-[0.99]"
+            >
+              <span>{service.ctaLabel}</span>
+              <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

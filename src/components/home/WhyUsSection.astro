@@ -1,0 +1,113 @@
+---
+import { companyData } from "@/data/company";
+---
+
+<section id="kenapa-kami" class="py-20 sm:py-28 bg-brand-warm border-b border-stone-200 scroll-mt-20">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Section Header */}
+    <div class="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 font-display tracking-tight mb-4">
+        Kenapa Memilih Kreasi Satu Desain?
+      </h2>
+      <p class="text-base sm:text-lg text-stone-600 font-light leading-relaxed">
+        Kami memadukan komitmen mutu, ketepatan perancangan, dan keterbukaan komunikasi untuk memberikan pengalaman pembangunan yang tenang dan memuaskan.
+      </p>
+    </div>
+
+    {/* Timeline Container */}
+    <div class="whyus-timeline relative">
+
+      {/* === Mobile & Tablet: Left-side timeline line (always visible below lg) === */}
+      <div class="lg:hidden absolute left-[7px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-brand/25 via-brand/15 to-brand/25 z-0" />
+
+      {/* === Desktop: Center timeline line === */}
+      <div class="hidden lg:block absolute left-1/2 -translate-x-px top-0 bottom-0 w-[2px] bg-gradient-to-b from-brand/20 via-brand/10 to-brand/20 z-0" />
+
+      {companyData.whyUs.map((item, idx) => {
+        const isEven = idx % 2 === 1;
+        const isLast = idx === companyData.whyUs.length - 1;
+
+        return (
+          <div class={`whyus-step relative ${!isLast ? 'pb-12 sm:pb-16' : ''}`}>
+
+            {/* === Mobile Dot (left-side) === */}
+            <div class="lg:hidden absolute left-0 top-1 z-10 h-[16px] w-[16px] rounded-full border-[3px] border-brand/40 bg-brand-warm" />
+
+            {/* === Desktop Dot (center) === */}
+            <div class="hidden lg:flex absolute left-1/2 -translate-x-1/2 top-6 z-10 h-4 w-4 rounded-full border-[3px] border-brand/40 bg-brand-warm" />
+
+            {/* === Mobile & Tablet Content (left-aligned, offset from timeline) === */}
+            <div class="lg:hidden relative z-10 pl-9">
+              <div class="flex items-start gap-4">
+                {/* Big Number */}
+                <span class="flex-shrink-0 text-5xl sm:text-6xl font-display font-bold text-brand/15 leading-none select-none -mt-1">
+                  {item.number}
+                </span>
+                {/* Title + Description */}
+                <div class="pt-1 min-w-0">
+                  <h3 class="text-lg sm:text-xl font-bold text-stone-900 font-display mb-2">
+                    {item.title}
+                  </h3>
+                  <p class="text-sm sm:text-base text-stone-600 leading-relaxed font-light">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* === Desktop Content (zigzag, respecting center timeline) === */}
+            <div class={`hidden lg:flex relative z-10 items-center ${isEven ? 'flex-row-reverse' : ''}`}>
+              {/* Text side — takes up just under half, with gap from center */}
+              <div class={`w-[calc(50%-2rem)] ${isEven ? 'text-right' : 'text-left'}`}>
+                <div class={`flex items-start gap-5 ${isEven ? 'flex-row-reverse' : ''}`}>
+                  {/* Big Number */}
+                  <span class="flex-shrink-0 text-7xl font-display font-bold text-brand/15 leading-none select-none -mt-2">
+                    {item.number}
+                  </span>
+                  {/* Title + Description */}
+                  <div class="pt-1">
+                    <h3 class="text-xl font-bold text-stone-900 font-display mb-3">
+                      {item.title}
+                    </h3>
+                    <p class="text-base text-stone-600 leading-relaxed font-light">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Spacer — the other half (empty, where the other side of the zigzag goes) */}
+              <div class="w-[calc(50%+2rem)]" />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Subtle entrance animation for each step */
+  .whyus-step {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: whyusFadeIn 0.6s ease-out forwards;
+  }
+
+  .whyus-step:nth-child(1) { animation-delay: 0.1s; }
+  .whyus-step:nth-child(2) { animation-delay: 0.2s; }
+  .whyus-step:nth-child(3) { animation-delay: 0.3s; }
+  .whyus-step:nth-child(4) { animation-delay: 0.4s; }
+  .whyus-step:nth-child(5) { animation-delay: 0.5s; }
+
+  @keyframes whyusFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+import { companyData } from "@/data/company";
+---
+
+<section class="py-20 lg:py-28 bg-white border-b border-stone-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      {/* Left Text Column */}
+      <div class="lg:col-span-7 space-y-6">
+        <h1 class="text-3xl sm:text-5xl font-bold text-stone-900 font-display tracking-tight leading-tight">
+          Tentang Kami
+        </h1>
+
+        <p class="text-lg sm:text-xl text-brand font-medium leading-relaxed">
+          "{companyData.tagline}"
+        </p>
+
+        <div class="text-stone-600 text-base sm:text-lg font-light leading-relaxed">
+          <p>
+            Dengan semangat <span class="font-semibold text-stone-900">{companyData.hashtag}</span>, kami bertekad untuk menciptakan ruang yang tidak hanya estetis dan fungsional, tetapi juga membawa harmoni bagi penghuninya dan lingkungan sekitarnya.
+          </p>
+        </div>
+
+        {/* 3 Core Highlights — text only */}
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-stone-200">
+          <div>
+            <h4 class="text-sm font-bold text-stone-900">Inovasi Desain</h4>
+            <p class="text-xs text-stone-500">Konsep terencana</p>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-stone-900">Mutu Struktur</h4>
+            <p class="text-xs text-stone-500">Standar ketahanan</p>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-stone-900">Kemitraan Erat</h4>
+            <p class="text-xs text-stone-500">Transparansi penuh</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Image Showcase Column */}
+      <div class="lg:col-span-5 relative">
+        <div class="relative overflow-hidden rounded-2xl bg-stone-100 border border-stone-200 shadow-xl">
+          <img
+            src="/images/hero/image-1-web-ksd.webp"
+            alt="Studio Kreasi Satu Desain"
+            class="h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

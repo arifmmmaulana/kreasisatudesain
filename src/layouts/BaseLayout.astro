@@ -1,0 +1,69 @@
+---
+import "@/styles/global.css";
+import Navbar from "@/components/common/Navbar.astro";
+import Footer from "@/components/common/Footer.astro";
+import WhatsAppFloating from "@/components/common/WhatsAppFloating.astro";
+import { companyData } from "@/data/company";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  currentPath?: string;
+}
+
+const {
+  title = `${companyData.name} | Jasa Desain Arsitektur & Konstruksi Bangunan`,
+  description = `${companyData.tagline}. Layanan profesional desain arsitektur hunian & komersial, visualisasi 3D, serta pembangunan dan renovasi berkualitas di Bogor, Jabodetabek & seluruh Indonesia.`,
+  ogImage = "/images/hero/section-1-web-rev@2x.webp",
+  currentPath = "/",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://kreasisatudesain.id");
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/webp" href="/images/branding/ksd-header-logo.webp" />
+    <meta name="generator" content={Astro.generator} />
+
+    {/* Primary Meta Tags */}
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    {/* Open Graph / Facebook */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, canonicalURL)} />
+
+    {/* Twitter */}
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(ogImage, canonicalURL)} />
+
+    {/* Preload Critical Fonts */}
+    <link rel="preload" href="/fonts/plus-jakarta-sans-normal-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-serif-display-normal-400.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="bg-[#FAF8F5] text-stone-900 antialiased min-h-screen flex flex-col selection:bg-brand-light selection:text-brand-dark">
+    <Navbar currentPath={currentPath} />
+    
+    <main class="flex-grow pt-20">
+      <slot />
+    </main>
+
+    <Footer />
+
+    {/* Interactive WhatsApp Floating Button */}
+    <WhatsAppFloating />
+  </body>
+</html>

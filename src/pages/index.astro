@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/home/Hero.astro";
+import ServicesSection from "@/components/home/ServicesSection.astro";
+import PortfolioSection from "@/components/home/PortfolioSection";
+import WhyUsSection from "@/components/home/WhyUsSection.astro";
+import HomeCta from "@/components/home/HomeCta.astro";
+import { companyData } from "@/data/company";
+
+const title = `${companyData.name} | Jasa Desain Arsitektur & Konstruksi Bangunan`;
+const description = `${companyData.tagline}. Wujudkan hunian dan bangunan impian Anda dengan layanan profesional desain arsitektur, visualisasi 3D, serta konstruksi berkualitas. Hubungi WhatsApp: 0821-1256-0657.`;
+---
+
+<BaseLayout title={title} description={description} currentPath="/">
+  {/* 1. Hero Section */}
+  <Hero />
+
+  {/* 2. Layanan Kami */}
+  <ServicesSection />
+
+  {/* 3. Showcase Galeri Portofolio */}
+  <PortfolioSection client:load />
+
+  {/* 4. Kenapa Memilih Kami */}
+  <WhyUsSection />
+
+  {/* 5. CTA WhatsApp Banner */}
+  <HomeCta />
+</BaseLayout>

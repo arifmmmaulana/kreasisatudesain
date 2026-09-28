@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AboutHero from "@/components/about/AboutHero.astro";
+import VisionMission from "@/components/about/VisionMission.astro";
+import LocationContact from "@/components/about/LocationContact.astro";
+import SocialLinks from "@/components/about/SocialLinks.astro";
+import { companyData } from "@/data/company";
+
+const title = `About Us | ${companyData.name}`;
+const description = `Tentang Kreasi Satu Desain, visi, 5 misi, alamat studio di Cibubur Country Bogor, serta kontak dan kanal resmi kami. #BuildHarmoniSpace.`;
+---
+
+<BaseLayout title={title} description={description} currentPath="/about">
+  {/* 1. About Profile & Story */}
+  <AboutHero />
+
+  {/* 2. Visi & Misi */}
+  <VisionMission />
+
+  {/* 3. Alamat & Kontak */}
+  <LocationContact />
+
+  {/* 4. Sosial Media */}
+  <SocialLinks />
+</BaseLayout>

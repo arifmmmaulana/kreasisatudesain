@@ -1,0 +1,52 @@
+---
+import { companyData } from "@/data/company";
+---
+
+<section class="py-24 bg-brand-warm border-b border-stone-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Vision Card Banner */}
+    <div class="relative overflow-hidden rounded-2xl bg-brand-dark text-white p-8 sm:p-12 mb-16 shadow-lg">
+      <div class="relative z-10 max-w-3xl">
+        <h2 class="text-2xl sm:text-4xl font-bold font-display tracking-tight text-white mb-6 leading-tight">
+          Visi Perusahaan
+        </h2>
+        <p class="text-base sm:text-xl text-white/80 font-light leading-relaxed">
+          "{companyData.vision}"
+        </p>
+      </div>
+    </div>
+
+    {/* 5 Missions Section */}
+    <div>
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-stone-900 font-display tracking-tight">
+          Misi Kami
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {companyData.missions.map((mission, idx) => (
+          <div
+            class={`flex flex-col justify-between rounded-2xl bg-white p-7 border border-stone-200 shadow-sm hover:shadow-lg hover:border-brand/40 transition-all duration-200 ${
+              idx === 4 ? "md:col-span-2 lg:col-span-1" : ""
+            }`}
+          >
+            <div>
+              <div class="mb-4">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light text-brand-dark font-bold text-sm">
+                  {mission.number}
+                </span>
+              </div>
+              <h3 class="text-lg font-bold text-stone-900 font-display mb-2">
+                {mission.title}
+              </h3>
+              <p class="text-sm text-stone-600 leading-relaxed font-light">
+                {mission.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
