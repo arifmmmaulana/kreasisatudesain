@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Hero from "@/components/home/Hero.astro";
 import ServicesSection from "@/components/home/ServicesSection.astro";
@@ -6,9 +8,30 @@ import PortfolioSection from "@/components/home/PortfolioSection";
 import WhyUsSection from "@/components/home/WhyUsSection.astro";
 import HomeCta from "@/components/home/HomeCta.astro";
 import { companyData } from "@/data/company";
+import { getProjects } from "@/lib/db";
+import { projectsData as fallbackProjects } from "@/data/projects";
 
 const title = `${companyData.name} | Jasa Desain Arsitektur & Konstruksi Bangunan`;
 const description = `${companyData.tagline}. Wujudkan hunian dan bangunan impian Anda dengan layanan profesional desain arsitektur, visualisasi 3D, serta konstruksi berkualitas. Hubungi WhatsApp: 0821-1256-0657.`;
+
+const env = (Astro.locals as any).runtime?.env;
+let projects = fallbackProjects;
+if (env?.DB) {
+  const dbProjects = await getProjects(env.DB);
+  if (dbProjects.length > 0) {
+    projects = dbProjects.map((p: any) => ({
+      id: p.id,
+      title: p.title,
+      category: p.category,
+      location: p.location,
+      year: p.year,
+      coverImage: p.cover_image,
+      gallery: (p.gallery ?? []).map((g: any) => g.image_url),
+      description: p.description,
+      highlights: (() => { try { return JSON.parse(p.highlights); } catch { return []; } })(),
+    }));
+  }
+}
 ---
 
 <BaseLayout title={title} description={description} currentPath="/">
@@ -19,7 +42,7 @@ const description = `${companyData.tagline}. Wujudkan hunian dan bangunan impian
   <ServicesSection />
 
   {/* 3. Showcase Galeri Portofolio */}
-  <PortfolioSection client:load />
+  <PortfolioSection client:load projects={projects} />
 
   {/* 4. Kenapa Memilih Kami */}
   <WhyUsSection />

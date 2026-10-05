@@ -1,0 +1,64 @@
+---
+export const prerender = false;
+---
+
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Admin — Kreasi Satu Desain</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&display=swap');
+      body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #FAF8F5; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+      .login-card { background: white; border: 1px solid #e7e5e4; border-radius: 1rem; padding: 2.5rem; width: 100%; max-width: 400px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+      h1 { font-size: 1.5rem; font-weight: 700; color: #1c1917; margin: 0 0 .25rem; }
+      p { font-size: .875rem; color: #78716c; margin: 0 0 1.5rem; }
+      label { display: block; font-size: .75rem; font-weight: 600; color: #44403c; margin-bottom: .375rem; text-transform: uppercase; letter-spacing: .05em; }
+      input { width: 100%; padding: .625rem .75rem; border: 1px solid #d6d3d1; border-radius: .5rem; font-size: .875rem; background: #fafaf9; box-sizing: border-box; }
+      input:focus { outline: none; border-color: #6B82A8; box-shadow: 0 0 0 2px rgba(107,130,168,.15); }
+      button { width: 100%; padding: .625rem; background: #6B82A8; color: white; border: none; border-radius: .5rem; font-size: .875rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: background .15s; }
+      button:hover { background: #4A6380; }
+      .error { color: #dc2626; font-size: .8rem; margin-top: .5rem; display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <h1>Login Admin</h1>
+      <p>Masuk untuk mengelola portfolio</p>
+      <form id="login-form">
+        <div style="margin-bottom: 1rem">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" required autocomplete="username" />
+        </div>
+        <div style="margin-bottom: .5rem">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password" />
+        </div>
+        <div id="error" class="error"></div>
+        <button type="submit">Masuk</button>
+      </form>
+    </div>
+    <script>
+      document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const err = document.getElementById('error');
+        err.style.display = 'none';
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        if (res.ok) {
+          window.location.href = '/admin';
+        } else {
+          const data = await res.json();
+          err.textContent = data.error || 'Login gagal';
+          err.style.display = 'block';
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { projectsData, type Project } from "@/data/projects";
+import type { Project } from "@/data/projects";
 import { getProjectWhatsAppUrl } from "@/lib/whatsapp";
 import { MapPin, Calendar, ArrowUpRight, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 
-export default function PortfolioSection() {
+interface Props {
+  projects: Project[];
+}
+
+export default function PortfolioSection({ projects }: Props) {
   const [activeCategory, setActiveCategory] = useState<string>("Semua");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const [isZoomOpen, setIsZoomOpen] = useState<boolean>(false);
 
-  const categories = ["Semua", "Rumah Tinggal"];
+  const categories = ["Semua", "Rumah Tinggal", "Interior", "Komersial"];
 
   const filteredProjects =
     activeCategory === "Semua"
-      ? projectsData
-      : projectsData.filter((p) => p.category === activeCategory);
+      ? projects
+      : projects.filter((p) => p.category === activeCategory);
 
   // Lock body scroll and handle keyboard navigation when modal is open
   useEffect(() => {

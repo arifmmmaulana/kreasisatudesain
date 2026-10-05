@@ -1,0 +1,121 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { getProject } from '@/lib/db';
+const env = (Astro.locals as any).runtime?.env;
+const { id } = Astro.params;
+const project = env?.DB && id ? await getProject(env.DB, id) : null;
+if (!project) return Astro.redirect('/admin/projects');
+const highlights = Array.isArray(project.highlights) ? project.highlights : (() => { try { return JSON.parse(project.highlights); } catch { return []; } })();
+---
+
+<AdminLayout title={`Edit: ${project.title}`}>
+  <h1>Edit Proyek</h1>
+  <div class="card">
+    <form id="edit-form">
+      <div class="grid grid-2">
+        <div class="form-group">
+          <label for="title">Judul</label>
+          <input id="title" name="title" type="text" required value={project.title} />
+        </div>
+        <div class="form-group">
+          <label for="category">Kategori</label>
+          <select id="category" name="category">
+            <option value="Rumah Tinggal" selected={project.category === 'Rumah Tinggal'}>Rumah Tinggal</option>
+            <option value="Komersial" selected={project.category === 'Komersial'}>Komersial</option>
+            <option value="Interior" selected={project.category === 'Interior'}>Interior</option>
+            <option value="Renovasi" selected={project.category === 'Renovasi'}>Renovasi</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="location">Lokasi</label>
+        <input id="location" name="location" type="text" required value={project.location} />
+      </div>
+      <div class="grid grid-2">
+        <div class="form-group">
+          <label for="year">Tahun</label>
+          <input id="year" name="year" type="text" required value={project.year} />
+        </div>
+        <div class="form-group">
+          <label for="coverImage">Cover Image URL</label>
+          <input id="coverImage" name="coverImage" type="text" value={project.cover_image} />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description">Deskripsi</label>
+        <textarea id="description" name="description">{project.description}</textarea>
+      </div>
+      <div class="form-group">
+        <label for="highlights">Highlights (pisah dengan koma)</label>
+        <input id="highlights" name="highlights" type="text" value={highlights.join(', ')} />
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="/admin/projects" class="btn btn-ghost">Batal</a>
+      </div>
+      <div id="error" class="alert alert-error" style="display:none; margin-top: 1rem;"></div>
+    </form>
+  </div>
+
+  <h2 style="margin-top: 2rem;">Gallery</h2>
+  <div class="card">
+    {project.gallery.length === 0 ? (
+      <p style="color: #78716c;">Belum ada gambar.</p>
+    ) : (
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+        {project.gallery.map((img, i) => (
+          <div style="position: relative; width: 200px;">
+            <img src={img.image_url} alt="" style="width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: .5rem; border: 1px solid #e7e5e4;" />
+            <button class="btn btn-danger" style="position: absolute; top: .5rem; right: .5rem; padding: .25rem .5rem; font-size: .7rem;" data-gallery-id={img.id}>Hapus</button>
+          </div>
+        ))}
+      </div>
+    )}
+    <form id="gallery-form" style="margin-top: 1rem;">
+      <div class="form-group">
+        <label for="galleryUrl">Tambah Gambar (URL)</label>
+        <div style="display: flex; gap: .5rem;">
+          <input id="galleryUrl" name="galleryUrl" type="text" placeholder="/images/r2/..." style="flex:1" />
+          <button type="submit" class="btn btn-primary">Tambah</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</AdminLayout>
+
+<script>
+  const projectId = '{id}';
+  document.getElementById('edit-form')!.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target as HTMLFormElement);
+    const body = {
+      title: fd.get('title'),
+      category: fd.get('category'),
+      location: fd.get('location'),
+      year: fd.get('year'),
+      cover_image: fd.get('coverImage'),
+      description: fd.get('description') || '',
+      highlights: JSON.stringify(fd.get('highlights')?.toString().split(',').map((s: string) => s.trim()).filter(Boolean) ?? []),
+    };
+    const res = await fetch(`/api/projects/${projectId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (res.ok) { window.location.href = '/admin/projects'; }
+    else { const d = await res.json(); (document.getElementById('error') as HTMLElement).style.display = 'block'; (document.getElementById('error') as HTMLElement).textContent = d.error; }
+  });
+
+  document.getElementById('gallery-form')!.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = (document.getElementById('galleryUrl') as HTMLInputElement).value;
+    if (!url) return;
+    const res = await fetch(`/api/projects/${projectId}/gallery`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image_url: url }) });
+    if (res.ok) location.reload();
+  });
+
+  document.querySelectorAll('[data-gallery-id]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const gid = (btn as any).dataset.galleryId;
+      await fetch(`/api/projects/${projectId}/gallery`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: gid }) });
+      location.reload();
+    });
+  });
+</script>

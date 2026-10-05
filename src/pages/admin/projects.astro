@@ -1,0 +1,55 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { getProjects } from '@/lib/db';
+const env = (Astro.locals as any).runtime?.env;
+const projects = env?.DB ? await getProjects(env.DB) : [];
+---
+
+<AdminLayout title="Projects">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1 style="margin-bottom: 0;">Projects</h1>
+    <a href="/admin/projects/new" class="btn btn-primary">+ Tambah Proyek</a>
+  </div>
+
+  {projects.length === 0 ? (
+    <p style="color: #78716c;">Belum ada proyek.</p>
+  ) : (
+    <table>
+      <thead>
+        <tr>
+          <th>Judul</th>
+          <th>Kategori</th>
+          <th>Lokasi</th>
+          <th>Tahun</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {projects.map(p => (
+          <tr>
+            <td><strong>{p.title}</strong></td>
+            <td><span class="badge">{p.category}</span></td>
+            <td>{p.location}</td>
+            <td>{p.year}</td>
+            <td class="actions">
+              <a href={`/admin/projects/${p.id}/edit`} class="btn btn-ghost">Edit</a>
+              <button class="btn btn-danger delete-btn" data-id={p.id} data-title={p.title}>Hapus</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</AdminLayout>
+
+<script>
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = (btn as any).dataset.id;
+      const title = (btn as any).dataset.title;
+      if (!confirm(`Hapus proyek "${title}"?`)) return;
+      fetch(`/api/projects/${id}`, { method: 'DELETE' }).then(() => location.reload());
+    });
+  });
+</script>

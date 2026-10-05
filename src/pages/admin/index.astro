@@ -1,0 +1,23 @@
+---
+export const prerender = false;
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { getProjects } from '@/lib/db';
+const env = (Astro.locals as any).runtime?.env;
+const projects = env?.DB ? await getProjects(env.DB) : [];
+const categories = [...new Set(projects.map(p => p.category))];
+---
+
+<AdminLayout title="Dashboard">
+  <h1>Dashboard</h1>
+  <div class="grid grid-2" style="max-width: 600px; margin-bottom: 2rem;">
+    <div class="stat-card">
+      <div class="number">{projects.length}</div>
+      <div class="label">Total Proyek</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">{categories.length}</div>
+      <div class="label">Kategori</div>
+    </div>
+  </div>
+  <p style="color: #78716c;">Gunakan menu Projects untuk mengelola portfolio.</p>
+</AdminLayout>

@@ -38,16 +38,21 @@ import { companyData } from "@/data/company";
         </div>
       </div>
 
-      {/* Right Image Showcase Column */}
+      {/* Right Video Showcase Column */}
       <div class="lg:col-span-5 relative">
         <div class="relative overflow-hidden rounded-2xl bg-stone-100 border border-stone-200 shadow-xl">
-          <img
-            src="/images/hero/image-1-web-ksd.webp"
-            alt="Studio Kreasi Satu Desain"
-            class="h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-          />
+          <video
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            poster="/images/hero/section-1-web-rev@2x.webp"
+            aria-label="Video showcase Kreasi Satu Desain"
+            class="aspect-video h-full w-full object-cover"
+          >
+            <source src="/videos/hero-video.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
     </div>
