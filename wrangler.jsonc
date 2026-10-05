@@ -8,7 +8,7 @@
     {
       "binding": "DB",
       "database_name": "ksd-portfolio",
-      "database_id": "YOUR_D1_DATABASE_ID"
+      "database_id": "5e16e181-00a0-46f1-8c22-fc95050dd54d"
     }
   ],
   "r2_buckets": [
