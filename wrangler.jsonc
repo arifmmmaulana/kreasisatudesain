@@ -5,8 +5,7 @@
   "main": "./dist/_worker.js",
   "routes": [
     { "pattern": "kreasisatudesain.id/*", "zone_name": "kreasisatudesain.id" },
-    { "pattern": "www.kreasisatudesain.id/*", "zone_name": "kreasisatudesain.id" },
-    { "pattern": "baru.kreasisatudesain.id/*", "zone_name": "kreasisatudesain.id" }
+    { "pattern": "www.kreasisatudesain.id/*", "zone_name": "kreasisatudesain.id" }
   ],
   "assets": { "directory": "./dist", "binding": "ASSETS" },
   "d1_databases": [
