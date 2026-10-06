@@ -24,7 +24,8 @@ Dokumen ini berisi panduan, konteks, dan aturan main (guardrails) bagi AI Agent 
    - **Gunakan `.astro`** secara default untuk sebagian besar konten statis (Hero, Navbar, Footer, text sections, dll) demi performa maksimal (zero JS).
    - **Gunakan `.tsx` (React)** HANYA ketika membutuhkan state management klien atau interaktivitas tinggi (seperti `PortfolioSection.tsx` yang butuh modal lightbox, filter, dll). Gunakan direktif seperti `client:load` atau `client:visible` pada Astro Islands.
 3. **Data Management:**
-   - Tidak menggunakan CMS eksternal. Semua data terpusat di `src/data/` (seperti `company.ts`, `projects.ts`, `services.ts`) dengan *strong typing*.
+   - Data statis (`company.ts`, `services.ts`) terpusat di `src/data/` dengan *strong typing*.
+   - Data proyek dinamis di **Cloudflare D1**, dikelola melalui admin panel (`/admin`) dan API di `src/pages/api/`.
 4. **Integrasi Komunikasi:**
    - Seluruh aksi kontak/CTA difokuskan pada WhatsApp. 
    - Gunakan fungsi utilitas dari `src/lib/whatsapp.ts` untuk meng-*generate* link WhatsApp (`wa.me`) dengan pesan yang telah dikonfigurasi berdasarkan konteks (misal: spesifik berdasarkan layanan atau proyek yang dilihat).
@@ -47,3 +48,5 @@ Dokumen ini berisi panduan, konteks, dan aturan main (guardrails) bagi AI Agent 
 - `npm run dev` : Menjalankan server lokal dengan HMR.
 - `npm run build` : Melakukan *build* untuk produksi (menghasilkan folder `dist/`).
 - `npm run preview` : Menjalankan server pratinjau dari hasil *build* lokal.
+- `npx wrangler deploy` : Deploy ke Cloudflare Workers.
+- `npx wrangler d1 migrations apply ksd-portfolio` : Terapkan migrasi database D1.

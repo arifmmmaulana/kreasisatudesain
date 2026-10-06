@@ -4,8 +4,8 @@ Dokumen ini menjelaskan arsitektur teknis, pola aliran data, dan struktur kompon
 
 ## 1. Paradigma Arsitektur: Islands Architecture
 
-Proyek ini dibangun menggunakan **Astro (Static Site Generator)** dengan pendekatan **Islands Architecture**. 
-- Secara default, seluruh halaman di-*render* secara statis menjadi HTML murni saat proses *build* (`npm run build`). Hal ini menjamin waktu muat (load time) yang sangat cepat dan optimasi SEO yang sangat baik.
+Proyek ini dibangun menggunakan **Astro 5** dengan pendekatan **Islands Architecture** dan output **server-rendered (SSR)** di Cloudflare Workers.
+- Halaman dirender di sisi server saat request (bukan statis), sehingga data proyek bisa selalu segar dari D1.
 - **Astro Islands:** Hanya komponen spesifik yang membutuhkan interaktivitas yang dihidrasi (hydrated) di sisi klien (browser) menggunakan **React 19**. Contohnya adalah `PortfolioSection.tsx` yang menggunakan direktif `client:load`.
 
 ## 2. Sistem Routing
@@ -24,14 +24,15 @@ Komponen ini bertugas menangani:
 
 ## 4. Manajemen Data & Aliran (Data Flow)
 
-Pendekatan website ini adalah **Zero CMS**. Tidak ada API *headles* atau sistem manajemen konten eksternal. Semua konten dikelola secara lokal pada *build time*.
+Website ini berjalan dalam mode **server-rendered (SSR)** di Cloudflare Workers. Konten statis (perusahaan, layanan) masih lokal di `src/data/`, sedangkan data proyek bersifat dinamis.
 
-- **Single Source of Truth:** Semua metadata dan konten diatur dalam folder `src/data/`.
-  - `company.ts`: Metadata perusahaan (nama, visi, misi, kontak).
-  - `projects.ts`: Portofolio karya arsitektur/konstruksi.
-  - `services.ts`: Layanan yang ditawarkan.
-- File-file ini bersifat *strongly-typed* (memiliki antarmuka/TypeScript Interfaces) sehingga mencegah kesalahan struktur data.
-- Komponen (seperti `WhyUsSection.astro` atau `PortfolioSection.tsx`) mengimpor data ini secara langsung dan merendernya (mapping).
+- **Single Source of Truth:**
+  - `company.ts` / `services.ts`: Metadata statis di `src/data/` (build-time, type-safe).
+  - Proyek: **Cloudflare D1** (binding `DB`, database `ksd-portfolio`) — dikelola via admin panel.
+- **Schema D1:** `migrations/0001_create_projects.sql` (tabel `projects` dan `gallery_images`).
+- **Gambar:** Disimpan di **Cloudflare R2** (bucket `ksd-portfolio-images`, binding `R2`), disajikan via endpoint `/images/r2/[...path]`.
+- **Auth Admin:** JWT (`jose`) + hashing password (`bcryptjs`), session cookie `session`, dijaga `src/middleware.ts`.
+- **API:** Endpoint di `src/pages/api/` untuk CRUD proyek, upload gambar, dan auth.
 
 ## 5. Komponen Interaktif (React)
 
@@ -56,8 +57,12 @@ Tidak menggunakan library *chat widget* yang berat. Widget WhatsApp di-*build* *
 
 ## 8. Deployment Workflow
 
-- Saat ini, *deployment* ke cPanel *Shared Hosting* dilakukan dengan cara **manual build**:
-  1. Jalankan `npm run build` lokal.
-  2. Hasil produksi (folder `dist/`) di-*zip*.
-  3. Upload `dist.zip` ke File Manager cPanel, ekstrak ke direktori `public_html` atau *subdomain root folder*.
-- Versi repositori (source code) disinkronisasi ke **GitHub** (`main` branch) sebagai *version control* dan backup.
+Deployment menggunakan **Cloudflare Workers** (via `@astrojs/cloudflare` + Wrangler):
+
+1. Build: `npm run build` (menghasilkan `dist/` dengan `_worker.js`).
+2. Deploy: `npx wrangler deploy`.
+3. Database D1 termigrasi via `npx wrangler d1 migrations apply ksd-portfolio`.
+
+- **Konfigurasi:** `wrangler.jsonc` (binding `DB` → D1, `R2` → R2 bucket, `SESSION_SECRET` env).
+- **Output:** `output: 'server'` di `astro.config.mjs` — halaman dirender di Workers, bukan HTML statis.
+- **Domain:** `kreasisatudesain.id` (subdomain `baru.kreasisatudesain.id`).
